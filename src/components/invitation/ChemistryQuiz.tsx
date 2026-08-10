@@ -89,14 +89,14 @@ export const ChemistryQuiz: React.FC<ChemistryQuizProps> = ({ onComplete }) => {
                 Question 2 of 2 🚀
               </h3>
               <p className="text-sm font-semibold text-slate-200">
-                How excited are you to go out together?
+                What is your favorite thing about TJ?
               </p>
 
               <div className="space-y-2.5 pt-2">
                 {[
-                  "Super excited! ✨",
-                  "Extremely excited! 💕",
-                  "1000% Excited! 🎉"
+                  "His smile 😊",
+                  "His sense of humor 😂",
+                  "Everything 💕"
                 ].map((opt, idx) => (
                   <button
                     key={idx}
