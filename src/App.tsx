@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
-import { Home } from './pages/Home';
 import { CreateInvitation } from './pages/CreateInvitation';
 import { InvitationView } from './pages/InvitationView';
 import { Dashboard } from './pages/Dashboard';
@@ -11,22 +10,24 @@ import { NotFound } from './pages/NotFound';
 
 const AppLayout: React.FC = () => {
   const location = useLocation();
-  const isInvitationRoute = location.pathname.startsWith('/invite') || location.pathname === '/demo';
+  // Standard navigation bar only on builder/dashboard/admin routes
+  const showNav = location.pathname === '/create' || location.pathname === '/dashboard';
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans selection:bg-rose-500 selection:text-white">
-      {!isInvitationRoute && <Navbar />}
+      {showNav && <Navbar />}
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/create" element={<CreateInvitation />} />
+          {/* Main website opens directly into Angel rose (Yahoo)'s invitation experience! */}
+          <Route path="/" element={<InvitationView />} />
           <Route path="/invite/:id" element={<InvitationView />} />
           <Route path="/demo" element={<InvitationView />} />
+          <Route path="/create" element={<CreateInvitation />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {!isInvitationRoute && <Footer />}
+      {showNav && <Footer />}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Home } from 'lucide-react';
+import { Heart, Home, Volume2, VolumeX, LayoutDashboard } from 'lucide-react';
 import { PlayfulNoButton } from '../components/invitation/PlayfulNoButton';
 import { Celebration } from '../components/invitation/Celebration';
 import { ChemistryQuiz } from '../components/invitation/ChemistryQuiz';
@@ -25,6 +25,7 @@ export const InvitationView: React.FC = () => {
   const [accepted, setAccepted] = useState<boolean>(false);
   const [declined, setDeclined] = useState<boolean>(false);
   const [quizPassed, setQuizPassed] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(soundService.getMuted());
 
   useEffect(() => {
     async function loadInvite() {
@@ -49,6 +50,11 @@ export const InvitationView: React.FC = () => {
     }
     loadInvite();
   }, [inviteId]);
+
+  const toggleSound = () => {
+    const muted = soundService.toggleMute();
+    setIsMuted(muted);
+  };
 
   const handleAccept = async () => {
     soundService.playClick();
@@ -106,13 +112,43 @@ export const InvitationView: React.FC = () => {
   const idea = DATE_IDEAS.find((i) => i.id === invitation.dateIdea);
 
   return (
-    <div className={`min-h-screen relative flex flex-col justify-between py-12 px-4 select-none ${theme.backgroundClass}`}>
+    <div className={`min-h-screen relative flex flex-col justify-between py-6 px-4 select-none ${theme.backgroundClass}`}>
       
       {/* Background Floating Heart Particles */}
       <FloatingHearts emojis={theme.floatingEmojis} count={18} />
 
+      {/* Subtle Header with Sound Toggle & TJ Dashboard Link */}
+      <header className="relative z-20 max-w-lg mx-auto w-full flex items-center justify-between py-2 px-1">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-xl bg-rose-500 flex items-center justify-center shadow-md">
+            <Heart className="w-4 h-4 text-white fill-white animate-pulse-slow" />
+          </div>
+          <span className="font-script text-lg font-bold text-slate-800">
+            For Angel rose (Yahoo) 💕
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleSound}
+            className="p-2 rounded-full bg-black/10 hover:bg-black/20 text-slate-800 transition"
+            title={isMuted ? "Unmute sound" : "Mute sound"}
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-rose-600" />}
+          </button>
+
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-1 py-1.5 px-3 rounded-full bg-black/10 hover:bg-black/20 text-slate-800 text-[11px] font-bold transition"
+          >
+            <LayoutDashboard className="w-3.5 h-3.5 text-rose-600" />
+            <span className="hidden sm:inline">TJ's Dashboard</span>
+          </Link>
+        </div>
+      </header>
+
       {/* Main Interactive Invitation Container */}
-      <main className="relative z-10 w-full max-w-lg mx-auto my-auto space-y-6">
+      <main className="relative z-10 w-full max-w-lg mx-auto my-auto py-6 space-y-6">
         
         <AnimatePresence mode="wait">
           {!quizPassed && !accepted ? (
@@ -159,7 +195,7 @@ export const InvitationView: React.FC = () => {
                 </div>
               )}
 
-              {/* Date Details Teaser Badge */}
+              {/* Activity Teaser Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/60 border border-white/80 text-xs font-bold shadow-sm">
                 <span>{idea?.emoji || '☕'}</span>
                 <span>{idea?.label || invitation.dateIdea}</span>
