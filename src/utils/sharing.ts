@@ -1,7 +1,18 @@
 import { Invitation } from '../types/invitation';
 
 export function getInvitationUrl(inviteId: string): string {
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://yourdomain.com';
+  let origin = 'https://tj-website-five.vercel.app';
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    origin = window.location.origin;
+  } else if (import.meta.env.VITE_APP_URL) {
+    origin = import.meta.env.VITE_APP_URL;
+  }
+
+  // If demo or main invite, point directly to root website domain
+  if (!inviteId || inviteId === 'demo') {
+    return `${origin}/`;
+  }
+
   return `${origin}/invite/${inviteId}`;
 }
 
@@ -12,7 +23,7 @@ export async function shareInvitation(invitation: Invitation): Promise<boolean> 
   if (typeof navigator !== 'undefined' && navigator.share) {
     try {
       await navigator.share({
-        title: `Date Invitation for ${invitation.recipientName} 💕`,
+        title: `Outing Invitation for ${invitation.recipientName} 💕`,
         text: shareText,
         url: url
       });
@@ -54,8 +65,8 @@ export function getShareLinks(invitation: Invitation) {
 
   return {
     whatsapp: `https://api.whatsapp.com/send?text=${text}`,
-    messenger: `fb-messenger://share/?link=${rawUrl}`, // fallback to standard copy if app not installed
+    messenger: `fb-messenger://share/?link=${rawUrl}`,
     sms: `sms:?&body=${text}`,
-    email: `mailto:?subject=${encodeURIComponent(`A special date invitation for ${invitation.recipientName} 💕`)}&body=${text}`
+    email: `mailto:?subject=${encodeURIComponent(`A special invitation for ${invitation.recipientName} 💕`)}&body=${text}`
   };
 }
