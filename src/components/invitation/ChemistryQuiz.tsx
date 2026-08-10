@@ -55,11 +55,11 @@ export const ChemistryQuiz: React.FC<ChemistryQuizProps> = ({ onComplete }) => {
                 Question 1 of 2 💖
               </h3>
               <p className="text-sm font-semibold text-slate-200">
-                Who has the cutest smile?
+                Who is the prettiest girl in the world?
               </p>
 
               <div className="space-y-2.5 pt-2">
-                {["Angel rose 🌸", "Yahoo 🐣", "Both of us together 💕"].map((opt, idx) => (
+                {["Angel rose 🌸", "Yahoo 💖", "Angel rose (Yahoo) 💕"].map((opt, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleQ1(idx)}
